@@ -47,63 +47,36 @@ double Twiddle::getTotalPerturbation() {
 }
 
 void Twiddle::twiddleParams() {
-    
-    int it = 0;
-    while sum(dp) > tol:
-        print("Iteration {}, best error = {}".format(it, best_err))
-        for i in range(len(p)):
-            p[i] += dp[i]
-            err = run(p)
-            
-            if err < best_err:
-                best_err = err
-                dp[i] *= 1.1
-                else:
-                    p[i] -= 2 * dp[i]
-                    robot = make_robot()
-                    x_trajectory, y_trajectory, err = run(robot, p)
-                    
-                    if err < best_err:
-                        best_err = err
-                        dp[i] *= 1.1
-                        else:
-                            p[i] += dp[i]
-                            dp[i] *= 0.9
-                            it += 1
-                            return p
-
-    do {
-        switch (_state) {
-            case 0:
+    do switch (_state) {
+        case 0:
+            best_error = current_error;
+            params[current_param] += perturbation[current_param];
+            _state = 1;
+            break;
+        case 1:
+            if (current_error < best_error) {
                 best_error = current_error;
-                params[current_param] += perturbation[current_param];
-                _state = 1;
-                break;
-            case 1:
-                if (current_error < best_error) {
-                    best_error = current_error;
-                    perturbation[current_param] *= 1.05;
-                    // finished with this param
-                    current_param = (current_param + 1) % params.size();
-                    _state = 0;
-                } else {
-                    params[current_param] -= 2 * perturbation[current_param];
-                    _state = 2;
-                }
-                break;
-            case 2:
-                if (current_error < best_error) {
-                    best_error = current_error;
-                    perturbation[current_param] *= 1.05;
-                } else {
-                    params[current_param] += perturbation[current_param];
-                    perturbation[current_param] *= 0.95;
-                }
-                
-                // this is the fianle param
+                perturbation[current_param] *= 1.05;
+                // finished with this param
                 current_param = (current_param + 1) % params.size();
                 _state = 0;
-                break;
-        }
+            } else {
+                params[current_param] -= 2 * perturbation[current_param];
+                _state = 2;
+            }
+            break;
+        case 2:
+            if (current_error < best_error) {
+                best_error = current_error;
+                perturbation[current_param] *= 1.05;
+            } else {
+                params[current_param] += perturbation[current_param];
+                perturbation[current_param] *= 0.95;
+            }
+            
+            // this is the fianle param
+            current_param = (current_param + 1) % params.size();
+            _state = 0;
+            break;
     } while (_state == 0);
 }
