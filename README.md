@@ -12,3 +12,13 @@ The approach used for tuning was to first find a value of Kp that brings the car
 
 ### Choosing final hyper-parameters
 A class implementing twiddling algorithm was used to automate the PID gains tuning. Because of some issues with reseting the simulation this was not pursued any further.
+
+## Basic Build Instructions
+
+- Clone this repo.
+
+- Make a build directory: `mkdir build && cd build`
+
+- Compile: `cmake .. && make`
+
+- Run it: `./pid`
