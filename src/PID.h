@@ -1,6 +1,8 @@
 #ifndef PID_H
 #define PID_H
 
+#include <chrono>
+
 class PID {
 public:
   /*
@@ -41,6 +43,10 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
+    
+private:
+    using clock = std::chrono::steady_clock;
+    clock::time_point time_point_;
 };
 
 #endif /* PID_H */
